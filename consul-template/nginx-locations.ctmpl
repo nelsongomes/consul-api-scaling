@@ -1,0 +1,25 @@
+{{ $ENVIRONMENT := or (env "ENVIRONMENT") "dev" }}
+# Setting up nginx for =={{ print $ENVIRONMENT }}== environment
+
+{{ range tree (print $ENVIRONMENT "/config") }}
+{{ .Key }}={{ .Value }}{{ end }}
+
+{{ key (print $ENVIRONMENT "/dev/services/nginx-static-service/path") }}
+
+{{- range services -}}
+    {{- if in .Tags "public-route" -}}
+        {{- $boxes := service .Name }}
+
+            {{- print $ENVIRONMENT "/dev/services/nginx-static-service/path" }}
+
+            {{- if gt (len $boxes) 0 -}}
+            {{- $path := "yeywiehd" }}
+location {{ $path }} {
+    proxy_pass https://{{.Name | replaceAll "--" "-"}}-pool/{{.Name | replaceAll "--" "/"}};
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+}
+            {{- end -}}
+
+    {{- end -}}
+{{- end -}}

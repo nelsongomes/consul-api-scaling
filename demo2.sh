@@ -1,19 +1,17 @@
 #!/bin/bash
 
-CONTAINER_NAME=static-server1
-SERVICE_NAME=nginx-static-service
-LOCALPATH=/Users/ngomes/git/consul-api-scaling
+CONTAINER_NAME=images-server1
+SERVICE_NAME=images-static-service
 
-docker run --name $CONTAINER_NAME \
-    -v $LOCALPATH/nginx/static:/usr/share/nginx/html:ro -d nginx
+docker run --name $CONTAINER_NAME -d nginx
 
 # detect container ip address
 IP=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' $CONTAINER_NAME`
 echo Assigned $IP
 
-# nginx-static-service /static > /
+# nginx-static-service /images > /
 curl --request PUT --data '[
-  {"KV":{"Verb":"set","Key":"dev/services/'$SERVICE_NAME'/publicPath","Value":"L3N0YXRpYw=="}},
+  {"KV":{"Verb":"set","Key":"dev/services/'$SERVICE_NAME'/publicPath","Value":"L2ltYWdlcw=="}},
   {"KV":{"Verb":"set","Key":"dev/services/'$SERVICE_NAME'/routedPath","Value":"Lw=="}}
 ]' http://127.0.0.1:8500/v1/txn
 

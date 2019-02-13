@@ -8,6 +8,7 @@ upstream {{.Name}}-pool {
     {{- range service .Name }}
     server {{.Address}}:{{.Port}};{{ end }}
 }
+{{ "" }}
         {{- end -}}
     {{- end -}}
 {{- end -}}

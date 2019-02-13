@@ -32,9 +32,10 @@ deduplicate {
     prefix = "consul-template/dedup/"
 }
 
+# route definitions for all services
 template {
     source      = "./consul-template/nginx-locations.ctmpl"
-    destination = "./consul-template/nginx-config"
+    destination = "./nginx/conf.d/default.conf"
 
     perms = 0400
     left_delimiter  = "{{"
@@ -44,6 +45,23 @@ template {
           max = "15s"
     }
 
-    # command = "restart service foo"
+    command = "docker exec load-balancer /etc/init.d/nginx reload"
+    command_timeout = "60s"
+}
+
+# service instances available
+template {
+    source      = "./consul-template/nginx-upstreams.ctmpl"
+    destination = "./nginx/nginx-upstreams.conf"
+
+    perms = 0400
+    left_delimiter  = "{{"
+    right_delimiter = "}}"
+    wait {
+          min = "5s"
+          max = "15s"
+    }
+
+    command = "docker exec load-balancer /etc/init.d/nginx reload"
     command_timeout = "60s"
 }

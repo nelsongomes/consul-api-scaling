@@ -1,9 +1,0 @@
-## dev
-
-testing=test1
-
-test1xxlocation /redis {
-    proxy_pass https://redis-pool/redis;
-    proxy_http_version 1.1;
-    proxy_set_header Connection "";
-}

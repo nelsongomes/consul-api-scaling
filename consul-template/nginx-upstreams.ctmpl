@@ -1,0 +1,13 @@
+{{- range services -}}
+    {{- if in .Tags "public-route" -}}
+        {{- $boxes := service .Name }}
+        {{- if gt (len $boxes) 0 -}}
+upstream {{.Name}}-pool {
+    least_conn;
+    keepalive 32;
+    {{- range service .Name }}
+    server {{.Address}}:{{.Port}};{{ end }}
+}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}

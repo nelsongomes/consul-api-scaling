@@ -52,14 +52,15 @@ server {
         {{- $boxes := service .Name }}
         
         {{- if gt (len $boxes) 0 -}}
-        {{- if keyExists ( print "/dev/services/" .Name "/publicPath") -}}
-        {{- if keyExists ( print "/dev/services/" .Name "/routedPath") -}}
+        {{- if keyExists ( print "/" $ENVIRONMENT "/services/" .Name "/publicPath") -}}
+        {{- if keyExists ( print "/" $ENVIRONMENT "/services/" .Name "/routedPath") -}}
 {{ "" }}        
 
-    # route service {{ .Name }} from {{ key ( print "/dev/services/" .Name "/publicPath") }} to path {{ key ( print "/dev/services/" .Name "/routedPath") }}
-    location {{ key ( print "/dev/services/" .Name "/publicPath") }} {
-        proxy_pass http://{{.Name}}-pool{{ key ( print "/dev/services/" .Name "/routedPath") }};
-        proxy_http_version 1.1;
+    # route service {{ .Name }} from {{ key ( print "/" $ENVIRONMENT "/services/" .Name "/publicPath") }} to path {{ key ( print "/dev/services/" .Name "/routedPath") }}
+    location {{ key ( print "/" $ENVIRONMENT "/services/" .Name "/publicPath") }} {
+        rewrite ^{{ key ( print "/" $ENVIRONMENT "/services/" .Name "/publicPath") }}(.*) $1 break;
+        proxy_pass http://{{.Name}}-pool{{ key ( print "/" $ENVIRONMENT "/services/" .Name "/routedPath") }};
+        proxy_http_version 1.1; 
         proxy_set_header Connection "";
 
         proxy_redirect    off;

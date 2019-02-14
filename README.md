@@ -3,7 +3,7 @@ Consul Api &amp; Automated Scaling Materials
 
 These are the materials used for 'Consul API & Automated Scaling'
 
-Video https://www.youtube.com/watch?v=JGgPb0nYahA
+Video   
 
 * consul.sh starts a consul server at http://localhost:8500
 * load-balancer.sh starts an nginx server listening at http://localhost:80 using config at nginx folder
